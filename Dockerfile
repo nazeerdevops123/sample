@@ -1,17 +1,14 @@
-# Use the official NGINX Alpine image
 FROM nginx:alpine
 
-# Use WORKDIR to set the context properly
-WORKDIR /usr/share/nginx/html
+# Remove all default NGINX files
+RUN rm -rf /usr/share/nginx/html/*
 
-# Delete the default NGINX index page first to avoid conflicts
-RUN rm -rf ./*
+# Copy your local index.html directly to the web root
+# Ensure index.html is in the same folder as this Dockerfile in your 'sample' repo
+COPY index.html /usr/share/nginx/html/index.html
 
-# Copy EVERYTHING from your local folder into the container
-# This ensures that your 'index.html' is exactly where it needs to be
-COPY . .
-
-# Adjust the port to 8080 for Spaceship Hyperlift compatibility
+# Force NGINX to listen on 8080 (Hyperlift requirement)
 RUN sed -i 's/listen\(.*\)80;/listen 8080;/g' /etc/nginx/conf.d/default.conf
 
-# No EXPOSE command needed for Hyperlift
+# Set permissions to ensure NGINX can read the file
+RUN chmod 644 /usr/share/nginx/html/index.html
