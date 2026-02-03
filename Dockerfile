@@ -1,4 +1,6 @@
-FROM nginx:alpine
-COPY index.html /usr/share/nginx/html/index.html
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+# Use the official Apache image
+FROM httpd:2.4
+
+# Copy your local HTML files to Apache's document root
+COPY ./index.html /usr/local/apache2/htdocs/
+
